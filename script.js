@@ -58,33 +58,45 @@ document.addEventListener("DOMContentLoaded", () => {
   // Contact form handling
   const contactForm = document.getElementById("contact-form")
 
-  contactForm.addEventListener("submit", (e) => {
+  contactForm.addEventListener("submit", async (e) => {
     e.preventDefault()
 
-    // Get form data
     const formData = new FormData(contactForm)
-    const name = formData.get("name")
-    const email = formData.get("email")
-    const message = formData.get("message")
+    const submitButton = contactForm.querySelector(".submit-button")
+    const originalText = submitButton.textContent
 
-    // Simple form validation
-    if (name && email && message) {
-      // Simulate form submission
-      const submitButton = contactForm.querySelector(".submit-button")
-      const originalText = submitButton.textContent
+    // Update button state
+    submitButton.textContent = "Sending..."
+    submitButton.disabled = true
 
-      submitButton.textContent = "Sending..."
-      submitButton.disabled = true
+    try {
+      const response = await fetch("contact.php", {
+        method: "POST",
+        body: formData,
+      })
 
-      setTimeout(() => {
+      const result = await response.json()
+
+      if (result.success) {
         submitButton.textContent = "Message Sent!"
         contactForm.reset()
 
+        // Show success message
         setTimeout(() => {
           submitButton.textContent = originalText
           submitButton.disabled = false
         }, 2000)
-      }, 1500)
+      } else {
+        throw new Error(result.message || "Failed to send message")
+      }
+    } catch (error) {
+      console.error("Error sending message:", error)
+      submitButton.textContent = "Error - Try Again"
+
+      setTimeout(() => {
+        submitButton.textContent = originalText
+        submitButton.disabled = false
+      }, 3000)
     }
   })
 
@@ -142,6 +154,42 @@ document.addEventListener("DOMContentLoaded", () => {
       heroContent.style.transform = `translateY(${scrolled * 0.5}px)`
     }
   })
+
+  // Music player functionality
+  const musicPlayer = document.getElementById("music-player")
+  const musicToggle = document.getElementById("music-toggle")
+
+  musicToggle.addEventListener("click", () => {
+    musicPlayer.classList.toggle("active")
+  })
+
+  // Close music player when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!musicPlayer.contains(e.target)) {
+      musicPlayer.classList.remove("active")
+    }
+  })
+
+  // Travel timeline animation
+  const timelineItems = document.querySelectorAll(".timeline-item")
+
+  const timelineObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animate")
+        }
+      })
+    },
+    {
+      threshold: 0.3,
+      rootMargin: "0px 0px -50px 0px",
+    },
+  )
+
+  timelineItems.forEach((item) => {
+    timelineObserver.observe(item)
+  })
 })
 
 // Add loading animation
@@ -153,3 +201,11 @@ window.addEventListener("load", () => {
     document.body.style.opacity = "1"
   }, 100)
 })
+
+// Function to open Figma projects
+function openFigmaProject(url) {
+  // Replace with actual Figma URLs when available
+  console.log("Opening Figma project:", url)
+  // window.open(url, '_blank')
+  alert("Figma project link will be added here. URL: " + url)
+}
