@@ -155,20 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
-  // Music player functionality
-  const musicPlayer = document.getElementById("music-player")
-  const musicToggle = document.getElementById("music-toggle")
-
-  musicToggle.addEventListener("click", () => {
-    musicPlayer.classList.toggle("active")
-  })
-
-  // Close music player when clicking outside
-  document.addEventListener("click", (e) => {
-    if (!musicPlayer.contains(e.target)) {
-      musicPlayer.classList.remove("active")
-    }
-  })
 
   // Travel timeline animation
   const timelineItems = document.querySelectorAll(".timeline-item")

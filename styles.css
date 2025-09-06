@@ -248,8 +248,8 @@ section {
   color: #333;
   margin-bottom: 25px;
   line-height: 1.8;
-   text-align: justify;   /* 👈 makes text aligned on both sides */
-  text-justify: inter-word; /* 👈 improves spacing between words */
+   text-align: justify; 
+  text-justify: inter-word; 
 }
 
 .about-image {
