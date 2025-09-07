@@ -155,7 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
-
   // Travel timeline animation
   const timelineItems = document.querySelectorAll(".timeline-item")
 
@@ -176,7 +175,134 @@ document.addEventListener("DOMContentLoaded", () => {
   timelineItems.forEach((item) => {
     timelineObserver.observe(item)
   })
+
+  initializeGalleries()
 })
+
+function initializeGalleries() {
+  const travelPlaces = document.querySelectorAll(".travel-place")
+
+  travelPlaces.forEach((place) => {
+    const gallery = place.querySelector(".place-gallery")
+    const slides = place.querySelectorAll(".gallery-slide")
+    const dots = place.querySelectorAll(".dot")
+    let currentSlide = 0
+    let autoSlideInterval
+
+    // Create navigation arrows
+    const prevBtn = document.createElement("button")
+    prevBtn.className = "gallery-nav prev"
+    prevBtn.innerHTML = "‹"
+    prevBtn.setAttribute("aria-label", "Previous image")
+
+    const nextBtn = document.createElement("button")
+    nextBtn.className = "gallery-nav next"
+    nextBtn.innerHTML = "›"
+    nextBtn.setAttribute("aria-label", "Next image")
+
+    gallery.appendChild(prevBtn)
+    gallery.appendChild(nextBtn)
+
+    // Function to show specific slide
+    function showSlide(index) {
+      // Remove active class from all slides and dots
+      slides.forEach((slide) => slide.classList.remove("active"))
+      dots.forEach((dot) => dot.classList.remove("active"))
+
+      // Add active class to current slide and dot
+      if (slides[index]) {
+        slides[index].classList.add("active")
+      }
+      if (dots[index]) {
+        dots[index].classList.add("active")
+      }
+
+      currentSlide = index
+    }
+
+    // Function to go to next slide
+    function nextSlide() {
+      const nextIndex = (currentSlide + 1) % slides.length
+      showSlide(nextIndex)
+    }
+
+    // Function to go to previous slide
+    function prevSlide() {
+      const prevIndex = (currentSlide - 1 + slides.length) % slides.length
+      showSlide(prevIndex)
+    }
+
+    // Auto-slide functionality
+    function startAutoSlide() {
+      autoSlideInterval = setInterval(nextSlide, 4000) // Change slide every 4 seconds
+    }
+
+    function stopAutoSlide() {
+      clearInterval(autoSlideInterval)
+    }
+
+    // Event listeners for navigation
+    nextBtn.addEventListener("click", (e) => {
+      e.stopPropagation()
+      nextSlide()
+      stopAutoSlide()
+      setTimeout(startAutoSlide, 8000) // Restart auto-slide after 8 seconds
+    })
+
+    prevBtn.addEventListener("click", (e) => {
+      e.stopPropagation()
+      prevSlide()
+      stopAutoSlide()
+      setTimeout(startAutoSlide, 8000)
+    })
+
+    // Dot navigation
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", (e) => {
+        e.stopPropagation()
+        showSlide(index)
+        stopAutoSlide()
+        setTimeout(startAutoSlide, 8000)
+      })
+    })
+
+    // Click on gallery to advance to next slide
+    gallery.addEventListener("click", (e) => {
+      // Only advance if not clicking on navigation elements
+      if (!e.target.closest(".gallery-nav") && !e.target.closest(".dot")) {
+        nextSlide()
+        stopAutoSlide()
+        setTimeout(startAutoSlide, 8000)
+      }
+    })
+
+    // Hover to pause auto-slide
+    gallery.addEventListener("mouseenter", stopAutoSlide)
+    gallery.addEventListener("mouseleave", startAutoSlide)
+
+    // Keyboard navigation
+    gallery.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        prevSlide()
+        stopAutoSlide()
+        setTimeout(startAutoSlide, 8000)
+      } else if (e.key === "ArrowRight") {
+        nextSlide()
+        stopAutoSlide()
+        setTimeout(startAutoSlide, 8000)
+      }
+    })
+
+    // Make gallery focusable for keyboard navigation
+    gallery.setAttribute("tabindex", "0")
+
+    // Start auto-slide
+    startAutoSlide()
+
+    // Initialize first slide
+    showSlide(0)
+  })
+}
 
 // Add loading animation
 window.addEventListener("load", () => {
