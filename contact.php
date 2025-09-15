@@ -45,7 +45,7 @@ Sent from your portfolio website contact form
 ";
 
 // Email headers
-$headers = "From: $email\r\n";
+$headers = "From: noreply@prabhash.com.np\r\n";
 $headers .= "Reply-To: $email\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
