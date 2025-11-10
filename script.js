@@ -316,8 +316,6 @@ window.addEventListener("load", () => {
 
 // Function to open Figma projects
 function openFigmaProject(url) {
-  // Replace with actual Figma URLs when available
-  console.log("Opening Figma project:", url)
-  // window.open(url, '_blank')
-  alert("Figma project link will be added here. URL: " + url)
+    // open in a new tab
+    window.open(url, '_blank');
 }
